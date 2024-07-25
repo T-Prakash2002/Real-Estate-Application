@@ -153,13 +153,13 @@ const UserContextProvider = ({ children }) => {
     try {
       const response = await axios.put(
         `${BASE_URL}/api/updateStatus/${id}?email=${email}`,
-        { isAvailable: isAvailable },
+        { isAvailable},
         { headers: { Authorization: ` ${token}` } }
       );
       if(response.data.message === "Error updating property for user"){
         alert("Error updating property");
       }else{
-        alert("Property updated successfully");
+        alert(response.data.message);
       }
       return response.data.message;
     } catch (error) {

@@ -6,9 +6,16 @@ import { Pencil, Trash2 } from "lucide-react";
 import "../style/home.css";
 
 const Home = () => {
-  const { isLoggedIn, getAllProperty, setOperation, deleteProperty,updateStatus } =
-    useContext(UserContext);
+  const {
+    isLoggedIn,
+    getAllProperty,
+    setOperation,
+    deleteProperty,
+    updateStatus,
+  } = useContext(UserContext);
   const [properties, setProperties] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [filterOptions, setFilterOptions] = useState("all");
 
   const userDetails = JSON.parse(localStorage.getItem("user"));
   const isLoggedInDetails = localStorage.getItem("isLoggedIn");
@@ -25,12 +32,60 @@ const Home = () => {
     }
   }, []);
 
+  let propertieslist = properties;
+
+  if (searchText.length > 0) {
+    propertieslist = properties.filter((property) => {
+      return (
+        property.type.toLowerCase().includes(searchText.toLowerCase()) ||
+        property.location.toLowerCase().includes(searchText.toLowerCase()) ||
+        property.city.toLowerCase().includes(searchText.toLowerCase()) ||
+        property.description.toLowerCase().includes(searchText.toLowerCase())||
+        property.price.toString().includes(searchText)
+      );
+    });
+  }
+
+  if (filterOptions === "available") {
+    propertieslist = propertieslist.filter((property) => {
+      return property.isAvailable;
+    });
+  }
+
+  if (filterOptions === "unavailable") {
+    propertieslist = propertieslist.filter((property) => {
+      return !property.isAvailable;
+    });
+  }
+
+  const handleModifyStatus = async (id,status) => {
+    setProperties(
+      properties.map((property) => {
+        if (property._id === id) {
+          return {
+            ...property,
+            isAvailable: status,
+          };
+        }
+        return property;
+      })
+    );
+  };
+
   return (
     <div className="d-flex justify-content-center">
       <div className="container">
         <div className="row">
           <div className="col-4">
-            <input type="text" id="search" placeholder="Search..." />
+            <input
+              type="text"
+              id="search"
+              placeholder="Search..."
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+              }}
+            />
           </div>
           <div className="col-4">
             <button
@@ -47,13 +102,22 @@ const Home = () => {
               Add New +
             </button>
           </div>
+
+          <div className="col-4">
+            <select className="form-select" aria-label="Default select example" onChange={(e) => {
+              setFilterOptions(e.target.value);
+            }}>
+              <option value="all">All</option>
+              <option value="available">Available</option>
+              <option value="unavailable">Unavailable</option>
+            </select>
+          </div>
         </div>
 
-        <div className="row properties">
-          {properties.length > 0
-            ? properties.map((property) => (
-                <div className="col-4 properties-card" key={property._id}>
-                  <div className="card">
+        <div className="row properties d-flex justify-content-center gap-4">
+          {propertieslist.length > 0
+            ? propertieslist.map((property,index) => (
+                <div className="col-4 card properties-card" key={index}>
                     <div className="card-body">
                       <p className="card-title">
                         <span>Property Type:</span>
@@ -75,7 +139,6 @@ const Home = () => {
                         {property.description}
                       </p>
 
-
                       <p className="card-text">
                         <span className="form-check form-switch">
                           <input
@@ -84,15 +147,18 @@ const Home = () => {
                             role="switch"
                             id="flexSwitchCheckDefault"
                             checked={property.isAvailable}
-                            onChange={async() => {
+                            onChange={async (e) => {
                               const result = confirm(
                                 "Are you sure you want to update this property?"
                               );
                               if (result) {
+
+                                handleModifyStatus(property._id,e.target.checked);
+
                                 await updateStatus(
                                   property._id,
                                   userDetails.email,
-                                  !property.isAvailable
+                                  e.target.checked
                                 );
                               }
                             }}
@@ -105,9 +171,6 @@ const Home = () => {
                           </label>
                         </span>
                       </p>
-
-
-
                     </div>
                     <div className="card-footer d-flex justify-content-between">
                       <button
@@ -142,7 +205,6 @@ const Home = () => {
                         <Trash2 size={16} className="ms-2" />
                       </button>
                     </div>
-                  </div>
                 </div>
               ))
             : "No properties found"}

@@ -45,34 +45,6 @@ const Navbar = () => {
                   
               </li>
 
-              <li className="nav-item">
-                <Link className="nav-link" to="/cart"
-                onClick={()=>{
-                  if(isLoggedIn){
-                    navigate("/cart")
-                  }else{
-                    alert("Please Login First")
-                  }
-                }}
-                >
-                  <span className="nav-link-text"> Cart</span>
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/wishlist" className="nav-link"
-                  onClick={()=>{
-                  if(isLoggedIn){
-                    navigate("/wishlist")
-                  }else{
-                    alert("Please Login First")
-                    
-                  }
-                  }}
-                >
-                  <span className="nav-link-text"> WishList</span>
-                </Link>
-              </li>
             </ul>
             {isLoggedIn ? (
               <div className=" d-flex gap-2 px-2">

@@ -188,12 +188,15 @@ const handleDeleteProperty = async (req, res) => {
 }
 
 const handleUpdateStatus = async (req, res) => {
+
   const { id } = req.params;
   const { email } = req.query;
-  const { isAvailable } = req.query;
+  const { isAvailable } = req.body;
+
 
   try {
-    const dbResponse = await propertyModel.findOneAndUpdate({ _id: id, userEmail: email }, { $set: { isAvailable } });
+    const dbResponse = await propertyModel.findOneAndUpdate({ _id: id, userEmail: email }, { $set: { isAvailable: isAvailable } });
+
     if (!dbResponse) {
       return res.status(400).json({ message: 'Error updating property' });
     } else {

@@ -22,10 +22,7 @@ const userSchema = new mongoose.Schema({
     type: String,
 
   },
-  isAvailable: {
-    type: Boolean,
-    default: false,
-  },
+  
 });
 
 const propertySchema = new mongoose.Schema({
@@ -46,7 +43,10 @@ const propertySchema = new mongoose.Schema({
   },
   description: {
     type: String,
-  }
+  },
+  isAvailable: {
+    type: Boolean,
+  },
 });
 
 const userModel = mongoose.model('user', userSchema);
