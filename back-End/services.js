@@ -1,35 +1,35 @@
 
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
-const UserModel = require('./schema');
+const { userModel, propertyModel } = require('./schema');
 
 
 
 const handleRegister = async (req, res) => {
   const { name, email, phone, city, password } = req.body;
 
-  const user = await UserModel.findOne({ email });
+  const user = await userModel.findOne({ email });
   if (user) {
     return res.status(400).json({ message: 'Email already exists' });
   }
 
   const myHashPassword = await bcryptjs.hash(password, 5);
 
-  const newUser = new UserModel({
+  const newUser = new userModel({
     name,
     email,
     phone,
     city,
-    password:myHashPassword,
+    password: myHashPassword,
   });
 
-  try{
-    
-    const dbResponse = await UserModel.create(newUser);
+  try {
 
-    if(!dbResponse){
+    const dbResponse = await userModel.create(newUser);
+
+    if (!dbResponse) {
       return res.status(400).json({ message: 'Error creating user' });
-    }else{
+    } else {
 
       const token = jwt.sign({
         id: dbResponse._id,
@@ -41,14 +41,14 @@ const handleRegister = async (req, res) => {
         message: 'User created successfully',
         token,
         data: dbResponse
-        
+
       });
       return;
     }
 
 
 
-  }catch(err){
+  } catch (err) {
     return res.status(500).json({ message: 'Error creating user' });
   }
 };
@@ -58,15 +58,15 @@ const handleLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
 
-    const user = await UserModel.findOne({ email });
+    const user = await userModel.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: 'Invalid Email' });
     }
 
     const isValid = await bcryptjs.compare(
-        password,
-        user.password
+      password,
+      user.password
     );
 
 
@@ -85,10 +85,10 @@ const handleLogin = async (req, res) => {
       message: 'Login Successful',
       token,
       data: {
-        name:user.name,
-        email:user.email,
-        city:user.city,
-        phone:user.phone
+        name: user.name,
+        email: user.email,
+        city: user.city,
+        phone: user.phone
       }
     });
 
@@ -99,8 +99,44 @@ const handleLogin = async (req, res) => {
   }
 };
 
+const verifyUser = async (email) => {
+  try {
+    const userData = await userModel.findOne({ email: email });
+
+    if (userData.email) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    return false;
+  }
+}
+
+const handleAddProperty = async (req, res) => {
+  const { type, location, city, price, description } = req.body;
+
+  try {
+    const dbResponse = await propertyModel.create({ type, location, city, price, description });
+    if (!dbResponse) {
+      return res.status(400).json({ message: 'Error creating property' });
+    } else {
+      return res.status(201).json({
+        message: 'Property created successfully',
+        data: dbResponse
+
+      });
+    }
+  } catch (err) {
+    return res.status(201).json({ message: 'Error creating property for user' });
+  }
+
+}
+
 
 module.exports = {
   handleRegister,
-  handleLogin
+  handleLogin,
+  verifyUser,
+  handleAddProperty
 };

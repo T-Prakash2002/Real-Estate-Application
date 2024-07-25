@@ -1,0 +1,82 @@
+
+
+.PropertyDetails{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.PropertyDetails form{
+    width: 40%;
+    height: fit-content;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--secondary-color);
+    border-radius: 7px;
+    gap: 10px;
+    min-width: fit-content;
+    position: relative;
+}
+
+.PropertyDetails .back-button{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+.PropertyDetails .back-button .BackArrow{
+    color: var(--primary-color);
+    font-size: 20px;
+}
+.PropertyDetails .back-button .BackArrow:hover{
+    color: var(--secondary-color);
+}
+
+.PropertyDetails .title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.PropertyDetails .title h1{
+  color: var(--primary-color);
+  font-family: var(--font-kanit);
+}
+
+form div{
+    display: flex;
+    flex-direction: column;
+}
+
+form div label{
+    display: flex;
+    justify-content: flex-start;
+    font-size: 14px;
+}
+
+form div input,textarea,select{
+    width: 100%;
+    height: 40px;
+    border: 0.5px solid var(--secondary-color);
+    border-radius: 4px;
+    outline: none;
+}
+
+form div input::placeholder{
+   color: rgb(138, 136, 136);
+   font-size: 12px;
+}
+
+
+
+form div button{
+    width: 100%;
+    height: 40px;
+    border: 0.5px solid var(--secondary-color);
+    border-radius: 4px;
+    outline: none;
+}

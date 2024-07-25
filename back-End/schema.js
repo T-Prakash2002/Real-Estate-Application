@@ -24,5 +24,25 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+const propertySchema = new mongoose.Schema({
+  type: {
+    type: String,
+  },
+  location: {
+    type: String,
+  },
+  city: {
+    type: String,
+   },
+ price: {
+     type: Number, 
+    }
+});
+
 const userModel=mongoose.model('user',userSchema);
-module.exports=userModel;
+const propertyModel=mongoose.model('property',propertySchema);
+
+module.exports={
+    userModel,
+    propertyModel
+};

@@ -7,6 +7,8 @@ const UserContext = createContext();
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [operation, setOperation] = useState('');
+  const token = localStorage.getItem("token") ?? '';
 
 
   useEffect(() => {
@@ -89,6 +91,18 @@ const UserContextProvider = ({ children }) => {
 
   };
 
+  const addProperty = async (propertyData) => {
+    console.log("propertyData");
+    try {
+      const response = await axios.post(`${BASE_URL}/api/addProperty`, {...propertyData}, { headers: { Authorization: ` ${token}` } });
+
+      return response.data.message;
+    
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -97,6 +111,7 @@ const UserContextProvider = ({ children }) => {
         login,
         register,
         logout,
+        addProperty
       }}
     >
       {children}

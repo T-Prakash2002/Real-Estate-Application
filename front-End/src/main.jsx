@@ -6,7 +6,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Login from '../src/components/Login.jsx'
 import Registeration from './components/Registeration.jsx'
 import Home from './components/Home.jsx'
-
+import AddProperty from './shared/AddProperty.jsx'
 
 const router = createBrowserRouter([
   {
@@ -24,6 +24,9 @@ const router = createBrowserRouter([
       {
         path: '/register_page',
         element: <Registeration />,
+      },{
+        path:'/addProperty',
+        element:<AddProperty />
       },
       {
         path: '*',
