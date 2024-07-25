@@ -1,24 +1,32 @@
 
+.search-column {
+  margin-top: 20px;
+  border: 1px solid var(--secondary-color);
+  padding: 20px;
+}
 #search {
-  border: 1px solid #ccc;
+  border: 1px solid var(--secondary-color);
   border-radius: 5px;
   padding: 5px;
 }
 
 .properties {
   margin-top: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--secondary-color);
   padding: 30px;
   border-radius: 5px;
 }
 .properties{
-    background-color: rgb(201, 165, 165);
+    background-color: var(--theme-color);
     padding: 20px;
     border-radius: 5px;
 }
 .card {
   margin-top: 10px;
   cursor: pointer;
+  border: 1px solid var(--secondary-color);
+  padding: 10px;
+  border-radius: 5px;
 }
 .card:hover {
   transform: scale(1.02);

@@ -29,6 +29,8 @@ const Home = () => {
           setProperties(data.data);
         });
       })();
+    }else{
+      setProperties([]);
     }
   }, []);
 
@@ -75,7 +77,7 @@ const Home = () => {
   return (
     <div className="d-flex justify-content-center">
       <div className="container">
-        <div className="row">
+        <div className="row search-column">
           <div className="col-4">
             <input
               type="text"

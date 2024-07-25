@@ -4,6 +4,7 @@
 :root {
   --primary-color: #0a5a39;
   --secondary-color: #49d4b6;
+  --theme-color: #f3f5f4;
   --font-color: #333;
   --font-size:clamp(24px, 2vw, 36px);
   --font-kanit: 'Kanit', sans-serif;
