@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     type: String,
 
   },
+  isAvailable: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const propertySchema = new mongoose.Schema({

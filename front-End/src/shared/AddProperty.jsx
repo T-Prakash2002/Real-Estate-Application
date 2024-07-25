@@ -17,12 +17,14 @@ function AddProperty() {
     city: "",
     price: "",
     description: "",
+    isAvailable: false,
   });
   const navigate = useNavigate();
 
   useEffect(() => {
     if (operation == "edit") {
       setPropertyData({
+        ...propertyData,
         userEmail: user.email,
         type: data.type,
         location: data.location,

@@ -128,6 +128,45 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  const deleteProperty = async (id,email) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/api/deleteProperty/${id}?email=${email}`,
+        { headers: { Authorization: ` ${token}` } }
+      );
+
+      if(response.data.message === "Error deleting property for user"){
+        alert("Error deleting property");
+      }else{
+        alert("Property deleted successfully");
+      }
+
+      return response.data.message;
+    } catch (error) {
+      console.log(error.response);
+    }
+
+
+  };
+
+  const updateStatus = async (id,email,isAvailable) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/api/updateStatus/${id}?email=${email}`,
+        { isAvailable: isAvailable },
+        { headers: { Authorization: ` ${token}` } }
+      );
+      if(response.data.message === "Error updating property for user"){
+        alert("Error updating property");
+      }else{
+        alert("Property updated successfully");
+      }
+      return response.data.message;
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -141,6 +180,8 @@ const UserContextProvider = ({ children }) => {
         addProperty,
         getAllProperty,
         editProperty,
+        deleteProperty,
+        updateStatus,
       }}
     >
       {children}

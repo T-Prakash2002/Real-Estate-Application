@@ -114,10 +114,10 @@ const verifyUser = async (email) => {
 }
 
 const handleAddProperty = async (req, res) => {
-  const { userEmail, type, location, city, price, description } = req.body;
+  const { userEmail, type, location, city, price, description, isAvailable } = req.body;
 
   try {
-    const dbResponse = await propertyModel.create({ userEmail, type, location, city, price, description });
+    const dbResponse = await propertyModel.create({ userEmail, type, location, city, price, description, isAvailable });
     if (!dbResponse) {
       return res.status(400).json({ message: 'Error creating property' });
     } else {
@@ -154,7 +154,7 @@ const handleEditProperty = async (req, res) => {
   const { type, location, city, price, description } = req.body;
 
   try {
-    const dbResponse = await propertyModel.findOneAndUpdate({ _id: id, userEmail:email }, { $set: { type, location, city, price, description } });
+    const dbResponse = await propertyModel.findOneAndUpdate({ _id: id, userEmail: email }, { $set: { type, location, city, price, description } });
     if (!dbResponse) {
       return res.status(400).json({ message: 'Error updating property' });
     } else {
@@ -168,6 +168,44 @@ const handleEditProperty = async (req, res) => {
   }
 }
 
+const handleDeleteProperty = async (req, res) => {
+  const { id } = req.params;
+  const { email } = req.query;
+
+  try {
+    const dbResponse = await propertyModel.findOneAndDelete({ _id: id, userEmail: email });
+    if (!dbResponse) {
+      return res.status(400).json({ message: 'Error deleting property' });
+    } else {
+      return res.status(201).json({
+        message: 'Property deleted successfully',
+        data: dbResponse
+      });
+    }
+  } catch (err) {
+    return res.status(201).json({ message: 'Error deleting property for user' });
+  }
+}
+
+const handleUpdateStatus = async (req, res) => {
+  const { id } = req.params;
+  const { email } = req.query;
+  const { isAvailable } = req.query;
+
+  try {
+    const dbResponse = await propertyModel.findOneAndUpdate({ _id: id, userEmail: email }, { $set: { isAvailable } });
+    if (!dbResponse) {
+      return res.status(400).json({ message: 'Error updating property' });
+    } else {
+      return res.status(201).json({
+        message: 'Property updated successfully',
+        data: dbResponse
+      });
+    }
+  } catch (err) {
+    return res.status(201).json({ message: 'Error updating property for user' });
+  }
+}
 
 module.exports = {
   handleRegister,
@@ -175,5 +213,7 @@ module.exports = {
   verifyUser,
   handleAddProperty,
   handleGetAllProperty,
-  handleEditProperty
+  handleEditProperty,
+  handleDeleteProperty,
+  handleUpdateStatus
 };
