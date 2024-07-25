@@ -7,12 +7,13 @@ const UserContext = createContext();
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [operation, setOperation] = useState('');
-  const token = localStorage.getItem("token") ?? '';
+  const [operation, setOperation] = useState("");
+  const token = localStorage.getItem("token") ?? "";
+
 
 
   useEffect(() => {
-    const tokenDetails = localStorage.getItem("token") ?? '';
+    const tokenDetails = localStorage.getItem("token") ?? token;
     const userDetails = localStorage.getItem("user") ?? user;
     const isLoggedInDetails = localStorage.getItem("isLoggedIn") ?? isLoggedIn;
 
@@ -23,25 +24,20 @@ const UserContextProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    
     try {
       const response = await axios.post(`${BASE_URL}/api/login`, {
         email,
         password,
       });
 
-
       setUser(response.data.data);
       setIsLoggedIn(true);
-
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.data));
       localStorage.setItem("isLoggedIn", true);
 
-
-      return response.data.message
-      
+      return response.data.message;
     } catch (error) {
       alert(error.response.data.message);
     }
@@ -81,23 +77,52 @@ const UserContextProvider = ({ children }) => {
   };
 
   const logout = () => {
-
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("isLoggedIn");
 
-    setIsLoggedIn(false)
-    setUser("")
-
+    setIsLoggedIn(false);
+    setUser("");
   };
 
   const addProperty = async (propertyData) => {
-    console.log("propertyData");
     try {
-      const response = await axios.post(`${BASE_URL}/api/addProperty`, {...propertyData}, { headers: { Authorization: ` ${token}` } });
+      const response = await axios.post(
+        `${BASE_URL}/api/addProperty`,
+        { ...propertyData },
+        { headers: { Authorization: ` ${token}` } }
+      );
 
       return response.data.message;
-    
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const getAllProperty = async (email) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/getAllProperty/${email}`,
+        { headers: { Authorization: ` ${token}` } }
+      );
+
+      return response.data;
+
+
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const editProperty = async (data,id) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/api/editProperty?id=${id}&email=${data.userEmail}`,
+        { ...data },
+        { headers: { Authorization: ` ${token}` } }
+      );
+
+      return response.data.message;
     } catch (error) {
       console.log(error.response);
     }
@@ -108,10 +133,14 @@ const UserContextProvider = ({ children }) => {
       value={{
         user,
         isLoggedIn,
+        operation,
+        setOperation,
         login,
         register,
         logout,
-        addProperty
+        addProperty,
+        getAllProperty,
+        editProperty,
       }}
     >
       {children}

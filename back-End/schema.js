@@ -20,11 +20,14 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-  
+
   },
 });
 
 const propertySchema = new mongoose.Schema({
+  userEmail: {
+    type: String,
+  },
   type: {
     type: String,
   },
@@ -33,16 +36,19 @@ const propertySchema = new mongoose.Schema({
   },
   city: {
     type: String,
-   },
- price: {
-     type: Number, 
-    }
+  },
+  price: {
+    type: Number,
+  },
+  description: {
+    type: String,
+  }
 });
 
-const userModel=mongoose.model('user',userSchema);
-const propertyModel=mongoose.model('property',propertySchema);
+const userModel = mongoose.model('user', userSchema);
+const propertyModel = mongoose.model('property', propertySchema);
 
-module.exports={
-    userModel,
-    propertyModel
+module.exports = {
+  userModel,
+  propertyModel
 };

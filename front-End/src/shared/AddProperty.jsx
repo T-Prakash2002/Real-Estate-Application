@@ -1,15 +1,17 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import "../style/AddProperty.css";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
-
-
 function AddProperty() {
-    const {addProperty}=useContext(UserContext)
+  const { addProperty, user, operation, editProperty } = useContext(UserContext);
+
+  const data = JSON.parse(localStorage.getItem("editItem"));
+
 
   const [propertyData, setPropertyData] = useState({
+    userEmail: user.email,
     type: "",
     location: "",
     city: "",
@@ -18,6 +20,19 @@ function AddProperty() {
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (operation == "edit") {
+      setPropertyData({
+        userEmail: user.email,
+        type: data.type,
+        location: data.location,
+        city: data.city,
+        price: data.price,
+        description: data.description,
+      });
+    }
+  }, []);
+
   const handleChange = (e) => {
     setPropertyData({ ...propertyData, [e.target.name]: e.target.value });
   };
@@ -25,18 +40,27 @@ function AddProperty() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const ApiRes = await addProperty(propertyData);
-    if (ApiRes==='Property created successfully') {
-      alert(ApiRes);
-      navigate("/");
+    if (operation === "edit") {
+      const ApiRes = await editProperty(propertyData, data._id);
+
+      if (ApiRes === "Property updated successfully") {
+        alert(ApiRes);
+        navigate("/");
+      }else {
+        alert("Error updating property");
+      }
     }
-    setPropertyData({
-      type: "",
-      location: "",
-      city: "",
-      price: "",
-      description: "",
-    });
+    if (operation === "add") {
+      const ApiRes = await addProperty(propertyData);
+
+      if (ApiRes === "Property created successfully") {
+        alert(ApiRes);
+        navigate("/");
+      }else {
+        alert("Error creating property");
+      }
+    }
+
   };
 
   return (
@@ -52,7 +76,7 @@ function AddProperty() {
           />
         </sup>
         <div className="title">
-          <h1>Add Property</h1>
+          <h1>{operation === "edit" ? "Edit Property" : "Add Property"}</h1>
         </div>
         <div className="form-container">
           <div className="form-group">

@@ -8,6 +8,7 @@ import Registeration from './components/Registeration.jsx'
 import Home from './components/Home.jsx'
 import AddProperty from './shared/AddProperty.jsx'
 
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -26,6 +27,9 @@ const router = createBrowserRouter([
         element: <Registeration />,
       },{
         path:'/addProperty',
+        element:<AddProperty />
+      },{
+        path:'/editProperty',
         element:<AddProperty />
       },
       {

@@ -13,6 +13,9 @@ const {
   handleLogin,
   verifyUser,
   handleAddProperty,
+  handleGetAllProperty,
+  handleGetProperty,
+  handleEditProperty,
 
 } = require('./services');
 
@@ -42,6 +45,7 @@ const auth = async (req, res, next) => {
       }
 
     }catch(err){
+      console.log("Error verifying token");
       return res.status(401).json({
         message: 'Error verifying token'
       });
@@ -72,6 +76,15 @@ app.post('/api/login', async (req, res) => {
 
 app.post('/api/addProperty', async (req, res) => {
   handleAddProperty(req, res);
+})
+
+app.get('/api/getAllProperty/:email', async (req, res) => {
+  handleGetAllProperty(req, res);
+})
+
+
+app.put('/api/editProperty', async (req, res) => {
+  handleEditProperty(req, res);
 })
 
 app.listen(port, () => {

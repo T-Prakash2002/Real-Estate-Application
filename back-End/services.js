@@ -114,23 +114,58 @@ const verifyUser = async (email) => {
 }
 
 const handleAddProperty = async (req, res) => {
-  const { type, location, city, price, description } = req.body;
+  const { userEmail, type, location, city, price, description } = req.body;
 
   try {
-    const dbResponse = await propertyModel.create({ type, location, city, price, description });
+    const dbResponse = await propertyModel.create({ userEmail, type, location, city, price, description });
     if (!dbResponse) {
       return res.status(400).json({ message: 'Error creating property' });
     } else {
       return res.status(201).json({
         message: 'Property created successfully',
         data: dbResponse
-
       });
     }
   } catch (err) {
     return res.status(201).json({ message: 'Error creating property for user' });
   }
+}
 
+const handleGetAllProperty = async (req, res) => {
+  const { email } = req.params;
+  try {
+    const dbResponse = await propertyModel.find({ userEmail: email });
+
+    if (!dbResponse) {
+      return res.status(400).json({ message: 'Error creating property' });
+    } else {
+      return res.status(201).json({
+        message: 'Property fetched successfully',
+        data: dbResponse
+      });
+    }
+  } catch (err) {
+    return res.status(201).json({ message: 'Error creating property for user' });
+  }
+}
+
+const handleEditProperty = async (req, res) => {
+  const { id, email } = req.query;
+  const { type, location, city, price, description } = req.body;
+
+  try {
+    const dbResponse = await propertyModel.findOneAndUpdate({ _id: id, userEmail:email }, { $set: { type, location, city, price, description } });
+    if (!dbResponse) {
+      return res.status(400).json({ message: 'Error updating property' });
+    } else {
+      return res.status(201).json({
+        message: 'Property updated successfully',
+        data: dbResponse
+      });
+    }
+  } catch (err) {
+    return res.status(201).json({ message: 'Error updating property for user' });
+  }
 }
 
 
@@ -138,5 +173,7 @@ module.exports = {
   handleRegister,
   handleLogin,
   verifyUser,
-  handleAddProperty
+  handleAddProperty,
+  handleGetAllProperty,
+  handleEditProperty
 };
